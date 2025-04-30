@@ -1,24 +1,36 @@
-name: Download Kaggle Dataset
+name: Sync Kaggle Notebooks
 
 on:
-  workflow_dispatch:  # This lets you trigger the workflow manually
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight
+  workflow_dispatch:
 
 jobs:
-  download-data:
+  sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Install Kaggle API
-        run: pip install kaggle
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
 
-      - name: Set up Kaggle credentials
-        run: |
-          mkdir -p ~/.kaggle
-          echo "{\"username\":\"${{ secrets.KAGGLE_USERNAME }}\",\"key\":\"${{ secrets.KAGGLE_KEY }}\"}" > ~/.kaggle/kaggle.json
-          chmod 600 ~/.kaggle/kaggle.json
+    - name: Install kaggle
+      run: pip install kaggle
 
-      - name: Download dataset
-        run: kaggle datasets download -d fajobgiua/heart-attack-risk-assessment-dataset --unzip
+    - name: Download Kaggle notebook
+      env:
+        KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}  # Store your username as a secret
+        KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}  # Store your API key as a secret
+      run: kaggle kernels pull nikhile223/Test1 -p .
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add .
+        git commit -m "Update Kaggle notebooks"
+        git push
