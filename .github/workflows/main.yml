@@ -16,21 +16,22 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.x
+        python-version: 3.9
 
-    - name: Install kaggle
+    - name: Install Kaggle CLI
       run: pip install kaggle
 
     - name: Download Kaggle notebook
       env:
         KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
         KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-      run: kaggle kernels pull nikhile223/Test1 -p .
+      run: kaggle kernels pull nikhile223/heart-attack-prediction -p .
 
     - name: Commit and push changes
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git remote set-url origin https://github-actions:${{ secrets.GH_TOKEN }}@github.com/itsnikhile/Kaggle.git
         git add .
         git commit -m "Update Kaggle notebooks"
         git push
