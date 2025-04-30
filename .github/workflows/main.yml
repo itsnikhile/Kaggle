@@ -21,4 +21,4 @@ jobs:
           chmod 600 ~/.kaggle/kaggle.json
 
       - name: Download dataset
-        run: kaggle datasets download -d zynicide/wine-reviews --unzip
+        run: kaggle datasets download -d fajobgiua/heart-attack-risk-assessment-dataset --unzip
