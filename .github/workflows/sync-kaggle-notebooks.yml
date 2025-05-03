@@ -28,4 +28,4 @@ jobs:
 
       - name: Upload Folder to Kaggle
         run: |
-          kaggle kernels push -p test/  # Replace with the correct folder path
+          kaggle kernels push -p test(2)/  # Replace with the correct folder path
