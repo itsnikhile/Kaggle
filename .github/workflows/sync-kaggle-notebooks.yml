@@ -1,4 +1,4 @@
-name: Sync Kaggle Notebooks
+name: New Sync Kaggle Notebooks
 
 on:
   push:
