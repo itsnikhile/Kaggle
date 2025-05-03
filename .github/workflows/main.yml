@@ -2,8 +2,8 @@ name: Sync Kaggle Notebooks
 
 on:
   schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
+    - cron: '0 0 * * *'  # Runs daily at midnight
+  workflow_dispatch:      # Allows manual triggering from GitHub UI
 
 jobs:
   sync:
@@ -25,14 +25,16 @@ jobs:
       env:
         KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
         KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
-      run: kaggle kernels pull nikhile223/heart-attack-prediction --path ./kaggle_download --metadata
+      run: |
+        mkdir -p kaggle_download
+        kaggle kernels pull nikhile223/heart-attack-prediction --path kaggle_download --metadata
 
     - name: Commit and push changes
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add .
+        git add kaggle_download/*
         git commit -m "Update Kaggle notebooks" || echo "No changes to commit"
-        git push
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/itsnikhile/Kaggle.git HEAD:main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
