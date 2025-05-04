@@ -1,9 +1,9 @@
-name: Sync Kaggle Notebooks
+name: New Sync Kaggle Notebooks
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight UTC
-  workflow_dispatch:      # Allows manual trigger
+    - cron: '0 0 * * *'  # Runs daily at midnight
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -21,17 +21,17 @@ jobs:
     - name: Install Kaggle CLI
       run: pip install kaggle
 
-    - name: Download Kaggle notebook
+    - name: Pull Kaggle Notebook
       env:
         KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
         KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       run: |
         mkdir -p kaggle_notebooks
-        kaggle kernels pull nikhile223/spotify-etl --path kaggle_notebooks --metadata
+        kaggle kernels pull nikhile223/spotify-etl -p kaggle_notebooks --force
 
     - name: Commit and push changes
       env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Personal access token with repo permissions
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: |
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
