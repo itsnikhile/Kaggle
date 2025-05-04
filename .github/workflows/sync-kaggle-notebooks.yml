@@ -21,7 +21,7 @@ jobs:
     - name: Install Kaggle CLI
       run: pip install kaggle
 
-    - name: Pull Kaggle Notebook
+    - name: Download Kaggle notebook
       env:
         KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
         KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
