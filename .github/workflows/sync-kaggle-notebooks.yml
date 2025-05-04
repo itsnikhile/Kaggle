@@ -3,7 +3,7 @@ name: Sync Kaggle Notebooks
 on:
   schedule:
     - cron: '0 0 * * *'  # Runs daily at midnight UTC
-  workflow_dispatch:      # Allows manual run from GitHub UI
+  workflow_dispatch:      # Allows manual trigger
 
 jobs:
   sync:
@@ -27,7 +27,16 @@ jobs:
         KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       run: |
         mkdir -p kaggle_notebooks
-        # Use the correct kernel ID here
         kaggle kernels pull nikhile223/spotify-etl --path kaggle_notebooks --metadata
 
-    # No push or commit steps, as we are only pulling data from Kaggle
+    - name: Commit and push changes
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Personal access token with repo permissions
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add kaggle_notebooks/
+        git diff --cached --quiet || (
+          git commit -m "Auto-sync: Update Kaggle notebook"
+          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref }}
+        )
