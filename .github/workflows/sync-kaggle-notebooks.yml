@@ -1,4 +1,4 @@
-name: New Sync Kaggle Notebooks
+name: Sync Kaggle Notebooks
 
 on:
   schedule:
@@ -27,7 +27,7 @@ jobs:
         KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       run: |
         mkdir -p kaggle_notebooks
-        kaggle kernels pull nikhile223/spotify-etl -p kaggle_notebooks --force
+        kaggle kernels pull nikhile223/spotify-etl -p kaggle_notebooks --metadata --quiet
 
     - name: Commit and push changes
       env:
