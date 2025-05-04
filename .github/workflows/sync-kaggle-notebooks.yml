@@ -27,7 +27,7 @@ jobs:
         KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
       run: |
         mkdir -p kaggle_notebooks
-        kaggle kernels pull nikhile223/spotify-etl -p kaggle_notebooks --metadata --quiet
+        kaggle kernels pull nikhile223/spotify-etl -p kaggle_notebooks --metadata
 
     - name: Commit and push changes
       env:
